@@ -11,7 +11,7 @@
   </head>
   <body>
 
-  <h1>Pagina Risultati</h1>
+  <h1>Pagina Risultati Parziali</h1>
     <?php
         $nominativo = $_GET['nomeStudente'];
         $Ndebiti = ""; //variabile per contare i debiti
@@ -21,6 +21,10 @@
         }else{
           $_SESSION['nominativo'] = $nominativo;
           $esito = "";
+          $finalResult = "";
+          if(!isset($_SESSION['esitiStudenti'])){
+            $_SESSION['esitiStudenti'] = []; // inizializza l'array per gli esiti se non esiste
+          }
           $genere = $_GET['genere'];
             if($genere == 'maschio'){ //verifica se l'alunno è maschio o femmina
                $esito = "<span><b> AMMESSO</b></span>";
@@ -34,24 +38,23 @@
                 $Ndebiti .= $debiti[$i] . " ";
               }
               if (count($debiti) >= 3) {//controllo se è stato promosso
-                  echo "<p>risultato di " . $nominativo . "<span><b>: NON </b></span>" . $esito ; "</p>";
+                  $finalResult = "<p>risultato di " . $nominativo . "<span><b>: NON </b></span>" . $esito ; "</p>";
+                  
               } else {
-                  echo "<p>Risultato di " . $nominativo . ":" . $esito . " con debiti in: " . $Ndebiti; "</p>";
+                  $finalResult = "<p>Risultato di " . $nominativo . ":" . $esito . " con debiti in: " . $Ndebiti; "</p>";
               }
           } else {
-              echo "<p>Risultato di " . $nominativo . ":" . $esito; "</p>";
+              $finalResult = "<p>Risultato di " . $nominativo . ":" . $esito; "</p>";
+          }
+          array_push( $_SESSION['esitiStudenti'], $finalResult);
+          for($i=0; $i<count($_SESSION['esitiStudenti']); $i++){
+            echo $_SESSION['esitiStudenti'][$i];
           }
         }
     ?>
             
-        
-       
-    
-        
-
-  
-    
-
+    <h5><a class="link-opacity-75" href="./index.php">Inserisci Altri studenti</a></h5>
+    <h5><a class="link-opacity-75" href="./risultati.php">Termina scrutinio</a></h5>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
 </html>
